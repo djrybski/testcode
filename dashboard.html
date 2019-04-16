@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<?php
+        session_start();
+        if(!isset($_SESSION['name']))
+        {
+                header("location: ../index.php");
+        }
+        $name=$_SESSION['name'];
+
+		$dbServerName ="";
+        $dbUsername = "tester";
+        $dbPassword = "bar";
+        $dbName = "FixIIT";
+        $dbPort = "3306";
+
+        // Create connection
+        $connect = mysqli_connect($dbServerName, $dbUsername, $dbPassword, $dbName, $dbPort) or die("Unable to Connect to '$dbServerName'");
+
+        // Check connection
+        if ($connect->connect_error) {
+            die("Connection failed: " . $connnect->connect_error);
+        }
+        if(isset($_POST['inputTicket'])){
+        $inputTicketName = $_POST['inputTicket'];
+        $inputTicketProblem = $_POST['inputProblem'];
+
+        $sql = "INSERT INTO tickets (userID,ticketName, submitDate, description)
+        VALUES ('$name','$inputTicketName',curdate(),'$inputTicketProblem')";
+
+        if ($connect->query($sql) === TRUE) {
+            echo "New record created successfully";
+        } else {
+            echo "Error: " . $sql . "<br>" . $connect->error;
+        }
+        }
+        $connect->close();
+
+?>
+<HTML>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../images/favi.png">
+
+  <title>Ticket</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../bootstrap-4.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+</head>
+<body>
+  <button onclick="window.location.href = './logout.php';" class="logout">Logout</button>
+
+  <button onclick="window.location.href = '../pages/displayed-tickets.php';" class="find-tickets">Find my submitted tickets</button>
+
+  <form action="" method="POST" class="form-signin">
+
+    <h1 class="h3 mb-3 font-weight-normal">Welcome</h1>
+    <label for="inputTicketName">Ticket Title: </label>
+    <input type="ticket" id="inputTicket" name="inputTicket" class="form-control" placeholder="Pothole" required autofocus>
+    <label for="inputDescription">Describe the Problem below: </label>
+    <input area type="text" id="inputProblem" name="inputProblem" class="form-control form-control-lg" placeholder="Huge pothole on 33d street!">
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+  </form>
+
+
+ </body>
+</HTML>
